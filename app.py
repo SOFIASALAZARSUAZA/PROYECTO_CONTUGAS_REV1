@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 # Cargar dataset optimizado
-df = pd.read_pickle("resultado_modelo_4_2023_liviano.pkl")
+df = pd.read_pickle("resultado_modelo_2023.pkl")
 
 # Crear columnas de fecha adicionales
 df['Año'] = df['Fecha'].dt.year
