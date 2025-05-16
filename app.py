@@ -12,18 +12,14 @@ df['Año'] = df['Fecha'].dt.year
 df['Mes'] = df['Fecha'].dt.month
 df['Dia'] = df['Fecha'].dt.day
 
-# Inicialización de la app
 app = Dash(__name__)
-server = app.server  # Para Railway
-
-# Layout estilizado
-df_clientes = df['Numero_Cliente'].unique()
+server = app.server
 
 app.layout = html.Div([
     html.Div([
-        html.Img(src="/assets/uniandes_logo.png", style={"height": "60px"}),
+        html.Img(src="/assets/uniandes_logo.png", style={"height": "90px"}),
         html.H1("DETECCIÓN DE OUTLIERS EN EL CONSUMO DE GAS", style={"margin": "0 auto", "fontWeight": "bold", "textAlign": "center"}),
-        html.Img(src="/assets/contugas_logo.png", style={"height": "60px"})
+        html.Img(src="/assets/contugas_logo.png", style={"height": "90px"})
     ], style={
         "display": "flex",
         "alignItems": "center",
@@ -33,17 +29,10 @@ app.layout = html.Div([
         "borderBottom": "1px solid #ccc"
     }),
 
-    html.Div([
-        html.Div([html.H3(f"{df['Numero_Cliente'].nunique()}", style={"margin": "0", "color": "#007bff"}), html.P("Clientes")],
-                 style={"backgroundColor": "#ffffff", "borderRadius": "10px", "boxShadow": "0 2px 4px rgba(0,0,0,0.1)", "padding": "20px", "textAlign": "center", "width": "30%"}),
-        html.Div([html.H3(f"{df[df['Tipo'] != 'Sin alerta'].shape[0]}", style={"margin": "0", "color": "#dc3545"}), html.P("Outliers")],
-                 style={"backgroundColor": "#ffffff", "borderRadius": "10px", "boxShadow": "0 2px 4px rgba(0,0,0,0.1)", "padding": "20px", "textAlign": "center", "width": "30%"}),
-        html.Div([html.H3(f"{df[df['Tipo'] == 'Crítica'].shape[0]}", style={"margin": "0", "color": "#ffc107"}), html.P("Alarmas críticas")],
-                 style={"backgroundColor": "#ffffff", "borderRadius": "10px", "boxShadow": "0 2px 4px rgba(0,0,0,0.1)", "padding": "20px", "textAlign": "center", "width": "30%"})
-    ], style={"display": "flex", "justifyContent": "space-around", "padding": "30px"}),
+    html.Div(id="indicadores", style={"display": "flex", "justifyContent": "space-around", "padding": "30px"}),
 
     html.Div([
-        dcc.Graph(id='grafico_comparacion')
+        dcc.Graph(id='grafico_comparacion', style={"height": "800px"})
     ], style={"padding": "0px 30px"}),
 
     html.Div([
@@ -61,11 +50,11 @@ app.layout = html.Div([
             html.Label("👤 Cliente", style={"fontWeight": "bold"}),
             dcc.Dropdown(
                 id='filtro_cliente',
-                options=[{"label": c, "value": c} for c in df_clientes],
+                options=[{"label": c, "value": c} for c in df['Numero_Cliente'].unique()],
                 value=None,
                 placeholder="Todos"
             )
-        ])
+        ], style={"minWidth": "300px"})
     ], style={"display": "flex", "gap": "40px", "padding": "20px 30px"}),
 
     html.Div([
@@ -89,7 +78,8 @@ app.layout = html.Div([
 
 @app.callback(
     [Output("grafico_comparacion", "figure"),
-     Output("tabla_detalle", "data")],
+     Output("tabla_detalle", "data"),
+     Output("indicadores", "children")],
     [Input("rango_fechas", "start_date"),
      Input("rango_fechas", "end_date"),
      Input("filtro_cliente", "value")]
@@ -108,8 +98,16 @@ def actualizar_vista(start_date, end_date, cliente):
     tabla_data = df_filtrado[['Fecha', 'Volumen', 'Volumen_Predicho', 'Error', 'Tipo']].copy()
     tabla_data['Fecha'] = tabla_data['Fecha'].dt.strftime('%d/%m/%Y')
 
-    return fig, tabla_data.to_dict('records')
+    tarjetas = [
+        html.Div([html.H3(f"{df_filtrado['Numero_Cliente'].nunique()}", style={"margin": "0", "color": "#007bff"}), html.P("Clientes")],
+                 style={"backgroundColor": "#ffffff", "borderRadius": "10px", "boxShadow": "0 2px 4px rgba(0,0,0,0.1)", "padding": "20px", "textAlign": "center", "width": "30%"}),
+        html.Div([html.H3(f"{df_filtrado[df_filtrado['Tipo'] != 'Sin alerta'].shape[0]}", style={"margin": "0", "color": "#dc3545"}), html.P("Outliers")],
+                 style={"backgroundColor": "#ffffff", "borderRadius": "10px", "boxShadow": "0 2px 4px rgba(0,0,0,0.1)", "padding": "20px", "textAlign": "center", "width": "30%"}),
+        html.Div([html.H3(f"{df_filtrado[df_filtrado['Tipo'] == 'Crítica'].shape[0]}", style={"margin": "0", "color": "#ffc107"}), html.P("Alarmas críticas")],
+                 style={"backgroundColor": "#ffffff", "borderRadius": "10px", "boxShadow": "0 2px 4px rgba(0,0,0,0.1)", "padding": "20px", "textAlign": "center", "width": "30%"})
+    ]
+
+    return fig, tabla_data.to_dict('records'), tarjetas
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
