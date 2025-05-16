@@ -3,13 +3,9 @@ import numpy as np
 from dash import Dash, html, dcc, Input, Output, dash_table
 import plotly.graph_objects as go
 
-# Cargar datos
-from datetime import datetime
-
 df = pd.read_pickle("resultado_modelo_2023.pkl")
 df['Año'] = df['Fecha'].dt.year
 
-# Clasificación del tipo de alerta según el error
 def clasificar_alerta(e):
     if e > 40:
         return "🔴 Crítica"
@@ -20,26 +16,25 @@ def clasificar_alerta(e):
     else:
         return "🟢 Sin alerta"
 
-if 'Error' not in df.columns:
-    df['Error'] = np.abs(df['Volumen'] - df['Volumen_Predicho'])
-if 'Tipo' not in df.columns:
-    df['Tipo'] = df['Error'].apply(clasificar_alerta)
+df['Error'] = np.abs(df['Volumen'] - df['Volumen_Predicho'])
+df['Tipo'] = df['Error'].apply(clasificar_alerta)
 
 app = Dash(__name__)
 server = app.server
 
-app.layout = html.Div([
-    html.Div([
-        html.Img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Escudo_Uniandes.svg/1200px-Escudo_Uniandes.svg.png", style={"height": "60px"}),
-        html.Img(src="https://www.contugas.com.pe/wp-content/uploads/2021/03/logo-contugas.png", style={"height": "60px", "float": "right"})
-    ], style={"display": "flex", "justify-content": "space-between", "padding": "10px 30px"}),
-
-    html.H2("DETECCIÓN DE OUTLIERS EN EL CONSUMO DE GAS", style={"textAlign": "center", "marginTop": "10px"}),
+app.layout = html.Div(style={"backgroundColor": "#ffffff", "color": "#000000", "fontFamily": "Arial"}, children=[
 
     html.Div([
-        html.Div([html.H3(f"{df['Numero_Cliente'].nunique()}", style={"marginBottom": "0px"}), html.P("Clientes")], className="card"),
-        html.Div([html.H3(f"{df[df['Tipo'] != '🟢 Sin alerta'].shape[0]}", style={"marginBottom": "0px", "color": "red"}), html.P("Outliers")], className="card"),
-        html.Div([html.H3(f"{df[df['Tipo'].str.contains('🔴')].shape[0]}", style={"marginBottom": "0px", "color": "orange"}), html.P("Alarmas críticas")], className="card"),
+        html.Img(src="/assets/uniandes_logo.png", style={"height": "80px"}),
+        html.Img(src="/assets/contugas_logo.png", style={"height": "80px"})
+    ], style={"display": "flex", "justifyContent": "space-between", "padding": "10px 30px"}),
+
+    html.H2("🔎 Detección de Outliers en el Consumo de Gas", style={"textAlign": "center", "marginTop": "10px"}),
+
+    html.Div([
+        html.Div([html.H3(f"{df['Numero_Cliente'].nunique()}"), html.P("Clientes")], className="card"),
+        html.Div([html.H3(f"{df[df['Tipo'] != '🟢 Sin alerta'].shape[0]}"), html.P("Outliers")], className="card"),
+        html.Div([html.H3(f"{df[df['Tipo'].str.contains('🔴')].shape[0]}"), html.P("Críticas")], className="card"),
     ], style={"display": "flex", "justifyContent": "space-around", "padding": "20px"}),
 
     html.Div([
@@ -48,7 +43,7 @@ app.layout = html.Div([
 
     html.Div([
         html.Div([
-            html.Label("Rango de fechas"),
+            html.Label("📅 Rango de fechas"),
             dcc.DatePickerRange(
                 id='rango_fechas',
                 start_date=df['Fecha'].min(),
@@ -58,15 +53,15 @@ app.layout = html.Div([
         ], style={"display": "inline-block", "marginRight": "40px"}),
 
         html.Div([
-            html.Label("Cliente"),
+            html.Label("👤 Cliente"),
             dcc.Dropdown(
                 id='filtro_cliente',
                 options=[{"label": c, "value": c} for c in df['Numero_Cliente'].unique()],
                 value=None,
                 placeholder="Todos",
-                style={"width": "300px"}
+                style={"width": "500px"}
             )
-        ], style={"display": "inline-block"}),
+        ], style={"display": "inline-block"})
     ], style={"padding": "20px 30px"}),
 
     html.Div([
@@ -80,10 +75,10 @@ app.layout = html.Div([
                 {"name": "Alerta", "id": "Tipo"},
             ],
             style_table={"overflowX": "auto"},
-            style_cell={"textAlign": "center", "fontSize": 14},
+            style_cell={"textAlign": "center", "fontSize": 14, "color": "black"},
             page_size=10
         )
-    ], style={"padding": "0px 30px 30px 30px"})
+    ], style={"padding": "0px 30px 30px 30px", "backgroundColor": "white"})
 ])
 
 @app.callback(
@@ -107,15 +102,15 @@ def actualizar_vista(start_date, end_date, cliente):
             x=df_filtrado['Fecha'],
             y=borde,
             mode="lines",
-            line=dict(color="rgba(0,0,255,0.4)", dash="dot"),
+            line=dict(color="rgba(0,0,255,0.3)", dash="dot"),
             showlegend=False,
             hoverinfo="skip"
         ))
 
     niveles = [
-        {"inf": 0.30, "sup": 0.60, "color": "rgba(230,240,250,0.3)"},
-        {"inf": 0.60, "sup": 0.80, "color": "rgba(255, 225, 153, 0.3)"},
-        {"inf": 0.80, "sup": 1.00, "color": "rgba(255, 204, 204, 0.3)"},
+        {"inf": 0.30, "sup": 0.60, "color": "rgba(255, 255, 0, 0.1)"},
+        {"inf": 0.60, "sup": 0.80, "color": "rgba(255, 165, 0, 0.2)"},
+        {"inf": 0.80, "sup": 1.00, "color": "rgba(255, 0, 0, 0.2)"},
     ]
 
     for banda in niveles:
@@ -126,9 +121,9 @@ def actualizar_vista(start_date, end_date, cliente):
             y=pd.concat([y0, y1[::-1]]),
             fill="toself",
             fillcolor=banda["color"],
-            line=dict(color="rgba(255,255,255,0)"),
-            hoverinfo="skip",
-            showlegend=False
+            line=dict(width=0),
+            showlegend=False,
+            hoverinfo="skip"
         ))
         y0_inf = yref * (1 - banda["inf"])
         y1_sup = yref * (1 - banda["sup"])
@@ -137,20 +132,26 @@ def actualizar_vista(start_date, end_date, cliente):
             y=pd.concat([y1_sup, y0_inf[::-1]]),
             fill="toself",
             fillcolor=banda["color"],
-            line=dict(color="rgba(255,255,255,0)"),
-            hoverinfo="skip",
-            showlegend=False
+            line=dict(width=0),
+            showlegend=False,
+            hoverinfo="skip"
         ))
 
-    fig.add_trace(go.Scatter(x=df_filtrado['Fecha'], y=df_filtrado['Volumen_Predicho'], mode='lines+markers', name='Valores predichos'))
-    fig.add_trace(go.Scatter(x=df_filtrado['Fecha'], y=df_filtrado['Volumen'], mode='markers', name='Valores observados', marker=dict(color='red')))
+    fig.add_trace(go.Scatter(x=df_filtrado['Fecha'], y=df_filtrado['Volumen_Predicho'], mode='lines+markers', name='Predicho', line=dict(color='blue')))
+    fig.add_trace(go.Scatter(x=df_filtrado['Fecha'], y=df_filtrado['Volumen'], mode='markers', name='Observado', marker=dict(color='red', size=5)))
 
-    fig.update_layout(title='Comparación de consumo de gas con bandas de alerta', xaxis_title='Fecha', yaxis_title='Volumen (m3)', template='plotly_dark', height=600)
+    fig.update_layout(
+        title='Volumen observado vs. predicho con bandas de alerta',
+        template='plotly_white',
+        xaxis_title='Fecha',
+        yaxis_title='Volumen (m3)',
+        height=700
+    )
 
     tabla_data = df_filtrado[['Fecha', 'Volumen', 'Volumen_Predicho', 'Error', 'Tipo']].copy()
     tabla_data['Fecha'] = tabla_data['Fecha'].dt.strftime('%d/%m/%Y')
 
-    return fig, tabla_data.to_dict('records')
+    return fig, tabla_data.to_dict("records")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run_server(debug=True)
