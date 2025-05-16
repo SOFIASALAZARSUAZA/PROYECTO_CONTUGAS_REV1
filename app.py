@@ -19,17 +19,27 @@ def clasificar_alerta(e):
 df['Error'] = np.abs(df['Volumen'] - df['Volumen_Predicho'])
 df['Tipo'] = df['Error'].apply(clasificar_alerta)
 
-app = Dash(__name__)
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
+app = Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 
-app.layout = html.Div(style={"backgroundColor": "#ffffff", "color": "#000000", "fontFamily": "Arial"}, children=[
+app.layout = html.Div(style={
+    "backgroundColor": "#ffffff",
+    "color": "#000000",
+    "fontFamily": "Arial",
+    "maxWidth": "1300px",
+    "margin": "0 auto"
+}, children=[
+    ...
+])
 
     html.Div([
-        html.Img(src="/assets/uniandes_logo.png", style={"height": "80px"}),
-        html.Img(src="/assets/contugas_logo.png", style={"height": "80px"})
+        html.Img(src="/assets/uniandes_logo.png", style={"height": "100px"}),
+        html.Img(src="/assets/contugas_logo.png", style={"height": "100px"})
     ], style={"display": "flex", "justifyContent": "space-between", "padding": "10px 30px"}),
 
-    html.H2("🔎 Detección de Outliers en el Consumo de Gas", style={"textAlign": "center", "marginTop": "10px"}),
+    html.H2(" Detección de Outliers en el Consumo de Gas", style={"textAlign": "center", "marginTop": "10px"}),
 
     html.Div([
         html.Div([html.H3(f"{df['Numero_Cliente'].nunique()}"), html.P("Clientes")], className="card"),
@@ -155,3 +165,4 @@ def actualizar_vista(start_date, end_date, cliente):
 
 if __name__ == "__main__":
     app.run_server(debug=True)
+
