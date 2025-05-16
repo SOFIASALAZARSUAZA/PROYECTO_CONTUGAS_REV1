@@ -7,7 +7,7 @@ import plotly.express as px
 # Leer CSV 
 #sheet_id = "1DtvLWWRj01lXN050djKPfbPfMElM_dqx" prueba
 #csv_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv" otra prueba
-df = pd.read_pickle("resultado_modelo_4_2023.pkl")
+df = pd.read_pickle("resultado_modelo_2023.pkl")
 
 # Crear columnas de fecha adicionales si no existen
 df['Año'] = df['Fecha'].dt.year
