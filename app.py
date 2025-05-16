@@ -34,26 +34,26 @@ app.layout = html.Div(style={
     ...
 ])
 
-    html.Div([
-        html.Img(src="/assets/uniandes_logo.png", style={"height": "100px"}),
-        html.Img(src="/assets/contugas_logo.png", style={"height": "100px"})
+        html.Div([
+        html.Img(src="/assets/uniandes_logo.png", style={"height": "80px"}),
+        html.Img(src="/assets/contugas_logo.png", style={"height": "80px"})
     ], style={"display": "flex", "justifyContent": "space-between", "padding": "10px 30px"}),
 
-    html.H2(" Detección de Outliers en el Consumo de Gas", style={"textAlign": "center", "marginTop": "10px"}),
+    html.H2("🔎 Detección de Outliers en el Consumo de Gas", style={"textAlign": "center", "marginTop": "10px"}),
 
-    html.Div([
+        html.Div([
         html.Div([html.H3(f"{df['Numero_Cliente'].nunique()}"), html.P("Clientes")], className="card"),
         html.Div([html.H3(f"{df[df['Tipo'] != '🟢 Sin alerta'].shape[0]}"), html.P("Outliers")], className="card"),
         html.Div([html.H3(f"{df[df['Tipo'].str.contains('🔴')].shape[0]}"), html.P("Críticas")], className="card"),
     ], style={"display": "flex", "justifyContent": "space-around", "padding": "20px"}),
 
-    html.Div([
+        html.Div([
         dcc.Graph(id='grafico_comparacion')
     ], style={"padding": "0px 30px"}),
 
-    html.Div([
         html.Div([
-            html.Label("📅 Rango de fechas"),
+        html.Div([
+        html.Label("📅 Rango de fechas"),
             dcc.DatePickerRange(
                 id='rango_fechas',
                 start_date=df['Fecha'].min(),
@@ -63,7 +63,7 @@ app.layout = html.Div(style={
         ], style={"display": "inline-block", "marginRight": "40px"}),
 
         html.Div([
-            html.Label("👤 Cliente"),
+        html.Label("👤 Cliente"),
             dcc.Dropdown(
                 id='filtro_cliente',
                 options=[{"label": c, "value": c} for c in df['Numero_Cliente'].unique()],
@@ -74,7 +74,7 @@ app.layout = html.Div(style={
         ], style={"display": "inline-block"})
     ], style={"padding": "20px 30px"}),
 
-    html.Div([
+        html.Div([
         dash_table.DataTable(
             id='tabla_detalle',
             columns=[
@@ -165,4 +165,3 @@ def actualizar_vista(start_date, end_date, cliente):
 
 if __name__ == "__main__":
     app.run_server(debug=True)
-
