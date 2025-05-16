@@ -2,21 +2,6 @@ import pandas as pd
 import numpy as np
 from dash import Dash, html, dcc, Input, Output, dash_table
 import plotly.graph_objects as go
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-
-mpl.rcParams.update({
-    "axes.facecolor": "#f0f0f0",
-    "axes.edgecolor": "black",
-    "axes.grid": True,
-    "grid.color": "#d0d0d0",
-    "grid.linestyle": "-",
-    "grid.linewidth": 0.5,
-    "axes.spines.top": False,
-    "axes.spines.right": False,
-    "xtick.color": "black",
-    "ytick.color": "black",
-})
 
 # Cargar datos
 from datetime import datetime
@@ -160,7 +145,7 @@ def actualizar_vista(start_date, end_date, cliente):
     fig.add_trace(go.Scatter(x=df_filtrado['Fecha'], y=df_filtrado['Volumen_Predicho'], mode='lines+markers', name='Valores predichos'))
     fig.add_trace(go.Scatter(x=df_filtrado['Fecha'], y=df_filtrado['Volumen'], mode='markers', name='Valores observados', marker=dict(color='red')))
 
-    fig.update_layout(title='Comparación de consumo de gas con bandas de alerta', xaxis_title='Fecha', yaxis_title='Volumen (m3)', template='plotly_white', height=600)
+    fig.update_layout(title='Comparación de consumo de gas con bandas de alerta', xaxis_title='Fecha', yaxis_title='Volumen (m3)', template='plotly_dark', height=600)
 
     tabla_data = df_filtrado[['Fecha', 'Volumen', 'Volumen_Predicho', 'Error', 'Tipo']].copy()
     tabla_data['Fecha'] = tabla_data['Fecha'].dt.strftime('%d/%m/%Y')
