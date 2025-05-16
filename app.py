@@ -19,77 +19,75 @@ def clasificar_alerta(e):
 df['Error'] = np.abs(df['Volumen'] - df['Volumen_Predicho'])
 df['Tipo'] = df['Error'].apply(clasificar_alerta)
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-app = Dash(__name__, external_stylesheets=external_stylesheets)
+app = Dash(__name__)
 server = app.server
 
-app.layout = html.Div(style={
-    "backgroundColor": "#ffffff",
-    "color": "#000000",
-    "fontFamily": "Arial",
-    "maxWidth": "1300px",
-    "margin": "0 auto"
-}, children=[
-    ...
-])
+app.layout = html.Div(
+    style={
+        "backgroundColor": "#ffffff",
+        "color": "#000000",
+        "fontFamily": "Arial",
+        "maxWidth": "1300px",
+        "margin": "0 auto"
+    },
+    children=[
+        html.Div([
+            html.Img(src="/assets/uniandes_logo.png", style={"height": "80px"}),
+            html.Img(src="/assets/contugas_logo.png", style={"height": "80px"})
+        ], style={"display": "flex", "justifyContent": "space-between", "padding": "10px 30px"}),
+
+        html.H2("🔎 Detección de Outliers en el Consumo de Gas", style={"textAlign": "center", "marginTop": "10px"}),
 
         html.Div([
-        html.Img(src="/assets/uniandes_logo.png", style={"height": "80px"}),
-        html.Img(src="/assets/contugas_logo.png", style={"height": "80px"})
-    ], style={"display": "flex", "justifyContent": "space-between", "padding": "10px 30px"}),
-
-    html.H2("🔎 Detección de Outliers en el Consumo de Gas", style={"textAlign": "center", "marginTop": "10px"}),
-
-        html.Div([
-        html.Div([html.H3(f"{df['Numero_Cliente'].nunique()}"), html.P("Clientes")], className="card"),
-        html.Div([html.H3(f"{df[df['Tipo'] != '🟢 Sin alerta'].shape[0]}"), html.P("Outliers")], className="card"),
-        html.Div([html.H3(f"{df[df['Tipo'].str.contains('🔴')].shape[0]}"), html.P("Críticas")], className="card"),
-    ], style={"display": "flex", "justifyContent": "space-around", "padding": "20px"}),
+            html.Div([html.H3(f"{df['Numero_Cliente'].nunique()}"), html.P("Clientes")]),
+            html.Div([html.H3(f"{df[df['Tipo'] != '🟢 Sin alerta'].shape[0]}"), html.P("Outliers")]),
+            html.Div([html.H3(f"{df[df['Tipo'].str.contains('🔴')].shape[0]}"), html.P("Críticas")])
+        ], style={"display": "flex", "justifyContent": "space-around", "padding": "20px"}),
 
         html.Div([
-        dcc.Graph(id='grafico_comparacion')
-    ], style={"padding": "0px 30px"}),
+            dcc.Graph(id='grafico_comparacion')
+        ], style={"padding": "0px 30px"}),
 
         html.Div([
+            html.Div([
+                html.Label("📅 Rango de fechas"),
+                dcc.DatePickerRange(
+                    id='rango_fechas',
+                    start_date=df['Fecha'].min(),
+                    end_date=df['Fecha'].max(),
+                    display_format='DD/MM/YYYY'
+                )
+            ], style={"display": "inline-block", "marginRight": "40px"}),
+
+            html.Div([
+                html.Label("👤 Cliente"),
+                dcc.Dropdown(
+                    id='filtro_cliente',
+                    options=[{"label": c, "value": c} for c in df['Numero_Cliente'].unique()],
+                    value=None,
+                    placeholder="Todos",
+                    style={"width": "500px"}
+                )
+            ], style={"display": "inline-block"})
+        ], style={"padding": "20px 30px"}),
+
         html.Div([
-        html.Label("📅 Rango de fechas"),
-            dcc.DatePickerRange(
-                id='rango_fechas',
-                start_date=df['Fecha'].min(),
-                end_date=df['Fecha'].max(),
-                display_format='DD/MM/YYYY'
+            dash_table.DataTable(
+                id='tabla_detalle',
+                columns=[
+                    {"name": "Fecha", "id": "Fecha"},
+                    {"name": "Volumen observado", "id": "Volumen"},
+                    {"name": "Volumen predicho", "id": "Volumen_Predicho"},
+                    {"name": "Error", "id": "Error"},
+                    {"name": "Alerta", "id": "Tipo"},
+                ],
+                style_table={"overflowX": "auto"},
+                style_cell={"textAlign": "center", "fontSize": 14, "color": "black"},
+                page_size=10
             )
-        ], style={"display": "inline-block", "marginRight": "40px"}),
-
-        html.Div([
-        html.Label("👤 Cliente"),
-            dcc.Dropdown(
-                id='filtro_cliente',
-                options=[{"label": c, "value": c} for c in df['Numero_Cliente'].unique()],
-                value=None,
-                placeholder="Todos",
-                style={"width": "500px"}
-            )
-        ], style={"display": "inline-block"})
-    ], style={"padding": "20px 30px"}),
-
-        html.Div([
-        dash_table.DataTable(
-            id='tabla_detalle',
-            columns=[
-                {"name": "Fecha", "id": "Fecha"},
-                {"name": "Volumen observado", "id": "Volumen"},
-                {"name": "Volumen predicho", "id": "Volumen_Predicho"},
-                {"name": "Error", "id": "Error"},
-                {"name": "Alerta", "id": "Tipo"},
-            ],
-            style_table={"overflowX": "auto"},
-            style_cell={"textAlign": "center", "fontSize": 14, "color": "black"},
-            page_size=10
-        )
-    ], style={"padding": "0px 30px 30px 30px", "backgroundColor": "white"})
-])
+        ], style={"padding": "0px 30px 30px 30px", "backgroundColor": "white"})
+    ]
+)
 
 @app.callback(
     [Output("grafico_comparacion", "figure"),
