@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 # Leer CSV directamente desde Google Sheets
-sheet_id = "1SR6Fs1hR0pUJl9Eq3NRbnpWoTRiQr138"
+sheet_id = "1DtvLWWRj01lXN050djKPfbPfMElM_dqx"
 csv_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv"
 df = pd.read_csv(csv_url, parse_dates=["Fecha"])
 
