@@ -39,8 +39,8 @@ server = app.server  # Para Railway
 
 app.layout = html.Div([
     html.Div([
-        html.Img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Escudo_Uniandes.svg/1200px-Escudo_Uniandes.svg.png", style={"height": "50px"}),
-        html.Img(src="https://www.contugas.com.pe/wp-content/uploads/2021/03/logo-contugas.png", style={"height": "50px", "float": "right"})
+        html.Img(src="/assets/uniandes_logo.png", style={"height": "50px"}),
+        html.Img(src="/assets/contugas_logo.png", style={"height": "50px", "float": "right"})
     ], style={"display": "flex", "justify-content": "space-between", "padding": "10px 30px"}),
 
     html.H2("DETECCIÓN DE OUTLIERS EN EL CONSUMO DE GAS", style={"textAlign": "center", "marginTop": "10px"}),
