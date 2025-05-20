@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from flask import send_from_directory
 from flask_cors import CORS
 import pandas as pd
 import os
@@ -238,6 +239,17 @@ def tabla_registros():
     df_filtrado['Fecha'] = pd.to_datetime(df_filtrado['Fecha']).dt.strftime('%Y-%m-%d %H:%M:%S')
 
     return jsonify(df_filtrado.to_dict(orient='records'))
+# ------------------------------------------------------
+# 19/05 12:25 SE REALIZA CAMBIO PARA PODER UTILIZAR 
+# DASHBOARD DESDE HTML
+# ------------------------------------------------------
+@app.route('/')
+def dashboard():
+    return send_from_directory('frontend', 'index.html')
+
+@app.route('/<path:filename>')
+def frontend_static_files(filename):
+    return send_from_directory('frontend', filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
