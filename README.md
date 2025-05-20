@@ -13,18 +13,27 @@ Este proyecto es un dashboard interactivo desarrollado con **Dash + Plotly** que
 ## Estructura del proyecto
 
 PROYECTO_CONTUGAS_REV1/
-├── app.py # Aplicación principal Dash
-├── resultado_modelo_4.xlsx # Dataset generado por el modelo final
+
 ├── requirements.txt # Dependencias para desplegar
-├── Procfile # Archivo para ejecución en Railway
-└── assets/
-└── styles.css # Estilo visual del dashboard
+├── Railway.json # Archivo para ejecución en Railway
+backend/
+├── data/
+│   ├── modelo_actual # Modelo con el cual se ejecuta la aplicación
+│   ├── modelo_nuevo
+├── input/
+│   ├── Datos_Contugas # Datos de ingreso para el modelo
+├── frontend/
+│   ├── index.html
+│   ├── style.css # Estilo visual del dashboard
+│   ├── script.js  
+├── app.py # Aplicación principal 
+├── modelo.py # Modelo
+├── entrenamiento_modelos.py # Entrenamiento del modelo
+├── admin_modelos.py # Administración de modelos
+
 
 ##  Despliegue en Railway
 
-1. Crear un repositorio en GitHub con esta estructura.
-2. Conectar Railway a tu cuenta GitHub.
-3. Crear nuevo proyecto > Deploy from GitHub repo.
-4. Railway detectará `Procfile` y desplegará automáticamente.
+La aplicación se encuentra desplegada en Railway con el siguiente link: https://web-production-e3288.up.railway.app/
 
 ##  Autores
