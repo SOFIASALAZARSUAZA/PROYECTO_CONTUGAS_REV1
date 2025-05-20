@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitoreo de Clientes</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img src="img/Uniandes.png" alt="Logo Uniandes">
+        </div>
+        <div class="header-center">
+            <h1>Monitoreo de Clientes</h1>
+        </div>
+        <div class="header-right">
+            <img src="img/logo.jpg" alt="Logo del proyecto">
+        </div>
+    </header>
+    <div class="filtros">
+        <label for="cliente">Cliente:</label>
+        <select id="cliente">
+            <option value="todos">Todos</option>
+            <option value="CLIENTE1">CLIENTE1</option>
+            <option value="CLIENTE2">CLIENTE2</option>
+            <option value="CLIENTE3">CLIENTE3</option>
+            <option value="CLIENTE4">CLIENTE4</option>
+            <option value="CLIENTE5">CLIENTE5</option>
+            <option value="CLIENTE6">CLIENTE6</option>
+            <option value="CLIENTE7">CLIENTE7</option>
+            <option value="CLIENTE8">CLIENTE8</option>
+            <option value="CLIENTE9">CLIENTE9</option>
+            <option value="CLIENTE10">CLIENTE10</option>
+            <option value="CLIENTE11">CLIENTE11</option>
+            <option value="CLIENTE12">CLIENTE12</option>
+            <option value="CLIENTE13">CLIENTE13</option>
+            <option value="CLIENTE14">CLIENTE14</option>
+            <option value="CLIENTE15">CLIENTE15</option>
+            <option value="CLIENTE16">CLIENTE16</option>
+            <option value="CLIENTE17">CLIENTE17</option>
+            <option value="CLIENTE18">CLIENTE18</option>
+            <option value="CLIENTE19">CLIENTE19</option>
+            <option value="CLIENTE20">CLIENTE20</option>
+        </select>
+
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" id="fechaInicio">
+
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" id="fechaFin">
+
+        <label for="riesgoFiltro">Riesgo:</label>
+        <select id="riesgoFiltro" multiple size="1" onfocus="this.size=4;" onblur="this.size=1;" onchange="this.size=1; this.blur();">
+            <option value="Alto">Alto</option>
+            <option value="Medio">Medio</option>
+            <option value="Bajo">Bajo</option>
+            <option value="Sin riesgo">Sin riesgo</option>
+        </select>
+    </div>
+    <div class="acciones-filtros">
+        <button id="btnLimpiarFiltros">🧹 Limpiar Filtros</button>
+        <button id="btnGenerarPDF">📄 Exportar a PDF</button>
+    </div>
+<div id="contenido-exportar">
+    <section class="kpis">
+        <div class="kpi-card">
+            <h2 id="clientes">0</h2>
+            <p>Total clientes</p>
+        </div>
+        <div class="kpi-card">
+            <h2 id="anomalias">0</h2>
+            <p>Anomalías detectadas</p>
+        </div>
+        <div class="kpi-card">
+            <h2 id="alertas">0</h2>
+            <p>Alertas críticas</p>
+        </div>
+        <div class="kpi-card">
+            <h2 id="presion">0 psi</h2>
+            <p>Presión promedio</p>
+        </div>
+        <div class="kpi-card">
+            <h2 id="temperatura">0 °C</h2>
+            <p>Temperatura promedio</p>
+        </div>
+        <div class="kpi-card">
+            <h2 id="volumen">0 m³</h2>
+            <p>Volumen promedio</p>
+        </div>
+    </section>
+
+    <h2 class="seccion-titulo">📈 Consumo Promedio Diario</h2>
+    <div class="grafica-item">
+        <canvas id="graficoConsumo" height="300"></canvas>
+    </div>
+
+    <h2  class="seccion-titulo">📊 Riesgo y Anomalías</h2>
+    <div class="graficas-doble">
+        <div class="grafica-item">
+            <canvas id="graficoRiesgoCliente" height="300"></canvas>
+        </div>
+        <div class="grafica-item">
+            <canvas id="heatmapAnomalias" height="300"></canvas>
+            <p id="mensajeSinAnomalias" style="text-align:center; color: #e74c3c; font-weight: bold; display: none;">
+                No se encontraron anomalías para los filtros seleccionados.
+            </p>
+        </div>
+    </div>
+
+    <h2 class="seccion-titulo">📋 Detalle de Registros</h2>
+    <div id="tabla-registros"></div>
+<div id="contenido-exportar">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@1.2.0/dist/chartjs-chart-matrix.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

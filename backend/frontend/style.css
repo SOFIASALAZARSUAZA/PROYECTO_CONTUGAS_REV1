@@ -1,0 +1,235 @@
+/* === Estilos generales === */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
+    padding: 20px;
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #003566, #0077b6);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.header-left,
+.header-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.header-center {
+    flex: 1;
+    text-align: center;
+}
+
+.header-left img,
+.header-right img {
+    max-width: 120px;
+    height: auto;
+    object-fit: contain;
+}
+
+.header-left,
+.header-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* izquierda */
+}
+
+.header-right {
+    justify-content: flex-end; /* derecha */
+}
+
+.header-center {
+    flex: 1;
+    text-align: center;
+}
+
+.header-center h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+}
+header img:hover {
+    transform: scale(1.05);
+}
+header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+/* === Filtros === */
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.filtros label {
+    font-weight: bold;
+}
+
+.filtros select,
+.filtros input[type="date"] {
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* === KPI Cards === */
+.kpis {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 15px;
+}
+
+.kpi-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 160px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.kpi-card h2 {
+    color: #007bff;
+}
+
+.kpi-card p {
+    color: #555;
+    font-size: 14px;
+}
+
+/* === Gráficas === */
+.graficas-doble {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.grafica-item {
+    flex: 1 1 48%;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.grafica-item canvas {
+    width: 100% !important;
+    height: auto !important;       /* Antes estaba height fija */
+    max-height: 300px;             /* Para no exceder tamaño */
+}
+
+/* === Tabla de registros === */
+#tabla-registros {
+    background: white;
+    margin-top: 30px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    overflow-y: auto;        /* Scroll vertical */
+    max-height: 400px;       /* Altura fija para mostrar aprox 10 filas */
+    overflow-x: auto;        /* Scroll horizontal si es necesario */
+}
+
+#tabla-registros table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 800px;
+}
+
+#tabla-registros th,
+#tabla-registros td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+#tabla-registros thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f1f1f1;
+    z-index: 2;
+}
+
+#tabla-registros tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.exportar #tabla-registros {
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+#tabla-registros td {
+    word-break: break-word;
+}
+
+@media (max-width: 520px) {
+  #graficoConsumo {
+    min-width: auto;
+    width: 100% !important;
+  }
+
+  .grafica-item {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+.seccion-titulo {
+    font-size: 20px;
+    font-weight: 600;
+    background: linear-gradient(to right, #007bff, #00c6ff);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+
+.acciones-filtros {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.acciones-filtros button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.acciones-filtros button:hover {
+    background-color: #0056b3;
+}
+
