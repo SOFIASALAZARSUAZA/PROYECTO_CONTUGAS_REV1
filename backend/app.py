@@ -3,7 +3,12 @@ from flask_cors import CORS
 import pandas as pd
 import os
 
+# ------------------------------------------------------
+# 19/05 12:25 SE REALIZA CAMBIO PARA PODER UTILIZAR 
+# RAILWAY CAMBIO REALIZADO POR SOFIA SALAZAR 
+# ------------------------------------------------------
 app = Flask(__name__)
+server = app  # Necesario para Gunicorn y Railway
 CORS(app)
 
 # Cargar el archivo 
@@ -18,14 +23,17 @@ df['Temperatura'] = pd.to_numeric(df['Temperatura'], errors='coerce')
 df = df.dropna(subset=['Fecha'])
 
 # Agrupar por cliente y fecha para series temporales
+# ------------------------------------------------------
+# 19/05 12:25 SE REALIZA CAMBIO EN LAS COLUMNAS DADO QUE 
+# SE AJUSTA ARCHIVO XLSX POR TAMAÑO PARA LOGRAR USAR LFS
+# CAMBIO REALIZADO POR SOFIA SALAZAR 
+# ------------------------------------------------------
 df_grouped = df.groupby(['Numero_Cliente', 'Fecha']).agg({
     'Volumen': 'mean',
     'Presion': 'mean',
     'Temperatura': 'mean',
     'Volumen_Predicho': 'mean',
-    'MSE': 'mean',
     'Residual': 'mean',
-    'Residual_Promedio_Abs': 'mean',
 }).reset_index()
 
 df_total_grouped = df.groupby('Fecha').agg({
