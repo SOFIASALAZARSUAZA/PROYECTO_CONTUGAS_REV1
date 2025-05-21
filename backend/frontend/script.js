@@ -1,13 +1,12 @@
-
 async function cargarDatos() {
-    const response = await fetch('/datos');
+    const response = await fetch('http://127.0.0.1:5000/datos');
     const data = await response.json();
     const contenedor = document.getElementById('datos');
     contenedor.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
 }
 
 async function predecir() {
-    const response = await fetch('/predecir', {
+    const response = await fetch('http://127.0.0.1:5000/predecir', {
         method: 'POST'
     });
     const result = await response.json();
@@ -18,7 +17,7 @@ async function predecir() {
 
 async function cargarKPIs() {
     try {
-        const url = `/kpis?${obtenerParametros()}`;
+        const url = `http://127.0.0.1:5000/kpis?${obtenerParametros()}`;
         const response = await fetch(url);
         const data = await response.json();
 
@@ -53,7 +52,7 @@ async function cargarKPIs() {
 }
 async function cargarGraficoConsumo() {
     try {
-        const url = `/grafico_volumen?${obtenerParametros()}`;
+        const url = `http://127.0.0.1:5000/grafico_volumen?${obtenerParametros()}`;
         const response = await fetch(url);
         const data = await response.json();
 
@@ -131,7 +130,7 @@ async function cargarGraficoConsumo() {
 
 async function cargarGraficoRiesgoCliente() {
     try {
-        const url = `/riesgo_por_cliente?${obtenerParametros()}`;
+        const url = `http://127.0.0.1:5000/riesgo_por_cliente?${obtenerParametros()}`;
         const response = await fetch(url);
         const data = await response.json();
 
@@ -187,7 +186,7 @@ async function cargarGraficoRiesgoCliente() {
 
 window.cargarHeatmapAnomalias = async function() {
     try {
-        const response = await fetch(`/anomalias_por_dia_hora?${obtenerParametros()}`);
+        const response = await fetch(`http://127.0.0.1:5000/anomalias_por_dia_hora?${obtenerParametros()}`);
         const data = await response.json();
 
         let dias = data.dias;
@@ -284,7 +283,7 @@ window.cargarHeatmapAnomalias = async function() {
 
 async function cargarTablaRegistros() {
     try {
-        const url = `/tabla_registros?${obtenerParametros()}`;
+        const url = `http://127.0.0.1:5000/tabla_registros?${obtenerParametros()}`;
         const response = await fetch(url);
         const data = await response.json();
 
@@ -352,7 +351,7 @@ function obtenerParametros() {
 
 async function actualizarRangoFechas() {
     const cliente = document.getElementById('cliente').value;
-    const url = `/rangos_fechas?cliente=${cliente}`;
+    const url = `http://127.0.0.1:5000/rangos_fechas?cliente=${cliente}`;
     
     try {
         const response = await fetch(url);
