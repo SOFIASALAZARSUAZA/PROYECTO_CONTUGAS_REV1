@@ -167,20 +167,24 @@ def anomalias_por_dia_hora():
         fin = request.args.get('fin')
         riesgos_param = request.args.get('riesgos')
 
-        df_filtrado = df[df['outlier'] == True]  # Solo anomalías
-        
-        # Aplicar filtros
+        df_filtrado = df[df['outlier'] == True] if 'outlier' in df.columns else pd.DataFrame()
+
+        # Aplicar filtros adicionales
         if cliente and cliente.lower() != 'todos':
             df_filtrado = df_filtrado[df_filtrado['Numero_Cliente'] == cliente]
         if inicio:
             df_filtrado = df_filtrado[df_filtrado['Fecha'] >= pd.to_datetime(inicio)]
         if fin:
             df_filtrado = df_filtrado[df_filtrado['Fecha'] <= pd.to_datetime(fin)]
-        if riesgos_param:
+        if riesgos_param and 'Riesgo' in df_filtrado.columns:
             riesgos_lista = riesgos_param.split(',')
             df_filtrado = df_filtrado[df_filtrado['Riesgo'].fillna('').isin(riesgos_lista)]
 
-        # Resto del código original...
+        # ✅ Verificar si hay datos antes de continuar
+        if df_filtrado.empty:
+            return jsonify({"dias": [], "horas": [], "matriz": []})
+
+        # Procesamiento
         df_filtrado['hora'] = df_filtrado['Fecha'].dt.hour
         df_filtrado['dia_nombre'] = df_filtrado['Fecha'].dt.day_name(locale='es')
 
@@ -198,8 +202,9 @@ def anomalias_por_dia_hora():
             "matriz": heatmap.fillna(0).values.tolist()
         })
     except Exception as e:
+        print(f"Error en /anomalias_por_dia_hora: {e}")
         return jsonify({"error": str(e)}), 500
-
+        
 @app.route('/tabla_registros', methods=['GET'])
 def tabla_registros():
     cliente = request.args.get('cliente')
