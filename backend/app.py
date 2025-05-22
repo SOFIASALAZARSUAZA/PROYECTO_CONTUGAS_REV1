@@ -159,9 +159,19 @@ def anomalias_por_dia_hora():
         fin = request.args.get('fin')
         riesgos_param = request.args.get('riesgos')
 
-        df_filtrado = df[df['outlier'] == True]  # Solo anomalías
+        df_filtrado = df.copy()
 
-        # Aplicar filtros
+        # Filtro de outliers (y validamos que la columna exista)
+        if 'outlier' not in df_filtrado.columns:
+            return jsonify({
+                "dias": [],
+                "horas": [],
+                "matriz": []
+            })
+
+        df_filtrado = df_filtrado[df_filtrado['outlier'] == True]
+
+        # Aplicar filtros adicionales
         if cliente and cliente.lower() != 'todos':
             df_filtrado = df_filtrado[df_filtrado['Numero_Cliente'] == cliente]
         if inicio:
@@ -172,6 +182,10 @@ def anomalias_por_dia_hora():
             riesgos_lista = riesgos_param.split(',')
             df_filtrado = df_filtrado[df_filtrado['Riesgo'].fillna('').isin(riesgos_lista)]
 
+        # Validar nuevamente fechas nulas después de todos los filtros
+        df_filtrado = df_filtrado.dropna(subset=['Fecha'])
+
+        # Si ya no hay datos válidos
         if df_filtrado.empty:
             return jsonify({
                 "dias": [],
@@ -179,7 +193,6 @@ def anomalias_por_dia_hora():
                 "matriz": []
             })
 
-        # Procesamiento normal
         df_filtrado['hora'] = df_filtrado['Fecha'].dt.hour
         df_filtrado['dia_nombre'] = df_filtrado['Fecha'].dt.day_name(locale='es')
 
@@ -198,9 +211,9 @@ def anomalias_por_dia_hora():
         })
 
     except Exception as e:
-        
-        print(f" Error en /anomalias_por_dia_hora: {e}")
+        print("Error en /anomalias_por_dia_hora:", e)
         return jsonify({"error": str(e)}), 500
+
 
 @app.route('/tabla_registros', methods=['GET'])
 def tabla_registros():
