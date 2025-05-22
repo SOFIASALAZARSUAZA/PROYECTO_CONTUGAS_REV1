@@ -184,7 +184,8 @@ async function cargarGraficoRiesgoCliente() {
     }
 }
 
-window.cargarHeatmapAnomalias = async function() {
+
+async function cargarHeatmapAnomalias() {
     try {
         const response = await fetch(`/anomalias_por_dia_hora?${obtenerParametros()}`);
         const data = await response.json();
