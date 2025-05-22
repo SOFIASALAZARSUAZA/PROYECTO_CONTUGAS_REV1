@@ -19,6 +19,14 @@ df['Fecha'] = pd.to_datetime(df['Fecha'], errors='coerce')
 df['Volumen'] = pd.to_numeric(df['Volumen'], errors='coerce')
 df['Presion'] = pd.to_numeric(df['Presion'], errors='coerce')
 df['Temperatura'] = pd.to_numeric(df['Temperatura'], errors='coerce')
+
+# Convertir columna 'outlier' a booleano si existe
+if 'outlier' in df.columns:
+    df['outlier'] = df['outlier'].astype(str).str.strip().str.upper().map({
+        'VERDADERO': True, 'FALSO': False, 'TRUE': True, 'FALSE': False
+    }).fillna(False)
+
+# Eliminar registros sin fecha válida
 df = df.dropna(subset=['Fecha'])
 
 # Crear columna con formato detallado para graficar por fecha y hora
