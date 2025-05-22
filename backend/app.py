@@ -186,21 +186,32 @@ def anomalias_por_dia_hora():
 
         # Procesamiento
         df_filtrado['hora'] = df_filtrado['Fecha'].dt.hour
-        df_filtrado['dia_nombre'] = df_filtrado['Fecha'].dt.day_name(locale='es')
+        # df_filtrado['dia_nombre'] = df_filtrado['Fecha'].dt.day_name(locale='es') 
+        df_filtrado['dia_nombre'] = df_filtrado['Fecha'].dt.day_name() 
+
 
         dias_orden = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
         dias_es = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
         mapping_dias = dict(zip(dias_orden, dias_es))
 
+
+        df_filtrado['dia_nombre'] = df_filtrado['dia_nombre'].map(lambda d: mapping_dias.get(d, d))
+
         heatmap = df_filtrado.groupby(['dia_nombre', 'hora']).size().unstack(fill_value=0)
-        heatmap.index = heatmap.index.map(lambda d: mapping_dias.get(d, d))
-        heatmap = heatmap.reindex(dias_es)
+        # La siguiente línea ya no es necesaria
+        # heatmap.index = heatmap.index.map(lambda d: mapping_dias.get(d, d))
+        heatmap = heatmap.reindex(dias_es) # Esto asegura el orden correcto
 
         return jsonify({
             "dias": list(heatmap.index),
             "horas": [str(h).zfill(2) for h in heatmap.columns],
             "matriz": heatmap.fillna(0).values.tolist()
         })
+        
+        #heatmap = df_filtrado.groupby(['dia_nombre', 'hora']).size().unstack(fill_value=0)
+        #heatmap.index = heatmap.index.map(lambda d: mapping_dias.get(d, d))
+        #heatmap = heatmap.reindex(dias_es)
+
     except Exception as e:
         print(f"Error en /anomalias_por_dia_hora: {e}")
         return jsonify({"error": str(e)}), 500
