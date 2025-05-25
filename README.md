@@ -13,7 +13,14 @@ Este proyecto es un dashboard interactivo desarrollado con **Dash + Plotly** que
 ## Estructura del proyecto
 
 PROYECTO_CONTUGAS_REV1/
-
+├──As Built Contugas # Documentación final del proyecto 
+│   ├── Anexo1.Anexo Técnico # Anexo Tecnico
+│   ├── Anexo2.Reporte de Selección y Parametrización de Modelos Contugas  
+│   ├── Anexo3. Modelo Contugas Pruebas Modelos
+│   ├── Manual_Usuario_Contugas
+│   ├── Modelo Contugas_V2
+│   ├── Tabla_Requerimientos Final
+│   ├── Presentación Final Contugas - Grupo 20 PDF
 ├── requirements.txt # Dependencias para desplegar
 ├── Railway.json # Archivo para ejecución en Railway
 backend/
@@ -34,6 +41,7 @@ backend/
 
 ##  Despliegue en Railway
 
-La aplicación se encuentra desplegada en Railway con el siguiente link: https://web-production-e3288.up.railway.app/
+La aplicación se encuentra desplegada en Railway con el siguiente link:
+### https://web-production-e3288.up.railway.app/
 
 ##  Autores
